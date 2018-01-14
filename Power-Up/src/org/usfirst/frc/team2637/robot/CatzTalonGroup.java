@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 /**
  * Allows multiple {@link WPI_TalonSRX} objects to be linked together.
  */
-public class CatzTalons extends SendableBase implements SpeedController {
+public class CatzTalonGroup extends SendableBase implements SpeedController {
   private boolean m_isInverted = false;
   private final WPI_TalonSRX[] m_speedControllers;
   private static int instances = 0;
@@ -30,7 +30,7 @@ public class CatzTalons extends SendableBase implements SpeedController {
    *
    * @param speedControllers The SpeedControllers to add
    */
-  public CatzTalons(WPI_TalonSRX speedController,
+  public CatzTalonGroup(WPI_TalonSRX speedController,
                     WPI_TalonSRX... speedControllers) {
 	  m_speedControllers = new WPI_TalonSRX[speedControllers.length + 1];
 	  m_speedControllers[0] = speedController;
