@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 /*
  * Designed to have a coasting CIM motor that can be actively toggled.
+ * Will set the hottest motor-controller to coasting state
  */
 
 
@@ -40,6 +41,7 @@ public class CatzTalonGroup extends SendableBase implements SpeedController {
 		  addChild(speedControllers[i]);
 	  }
     	
+	  m_hotMot = null;
 	  this.dropItIfItsHot();
     
 	  m_useHotMot = false;
@@ -61,14 +63,21 @@ public class CatzTalonGroup extends SendableBase implements SpeedController {
   
   	public void dropItIfItsHot()
   	{ 
-  		m_hotMot = m_speedControllers[0];
-  		
-  		for (WPI_TalonSRX talon : m_speedControllers)
+  		if (m_speedControllers.length > 1)
   		{
-  			m_hotMot = getHotMot(talon, m_hotMot);
+	  		m_hotMot = m_speedControllers[0];
+	  		
+	  		for (WPI_TalonSRX talon : m_speedControllers)
+	  		{
+	  			m_hotMot = getHotMot(talon, m_hotMot);
+	  		}
+	  		
+	  		m_hotMot.setNeutralMode(NeutralMode.Coast);
   		}
-  		
-  		m_hotMot.setNeutralMode(NeutralMode.Coast);
+  		else
+  		{
+  			return;
+  		}
   	}
   	
   	private WPI_TalonSRX getHotMot(WPI_TalonSRX t1, WPI_TalonSRX t2)
@@ -77,20 +86,28 @@ public class CatzTalonGroup extends SendableBase implements SpeedController {
   	}
 
   	@Override
-  	public void set(double speed) {
-  		for (WPI_TalonSRX speedController : m_speedControllers) {
-  			
-  			if (speedController != m_hotMot)
-  			{
-  				speedController.set(m_isInverted ? -speed : speed);
-  			}
-  			else
-  			{
-  				if (m_useHotMot)
-  				{
-  					speedController.set(m_isInverted ? -speed : speed);
-  				}
-  			}
+  	public void set(double speed) 
+  	{
+  		if (m_speedControllers.length > 1)
+  		{
+	  		for (WPI_TalonSRX speedController : m_speedControllers) 
+	  		{	
+	  			if (speedController.getDeviceID() != m_hotMot.getDeviceID())
+	  			{
+	  				speedController.set(m_isInverted ? -speed : speed);
+	  			}
+	  			else
+	  			{
+	  				if (m_useHotMot)
+	  				{
+	  					speedController.set(m_isInverted ? -speed : speed);
+	  				}
+	  			}
+	  		}
+  		}
+  		else
+  		{
+  			m_speedControllers[0].set(m_isInverted ? -speed : speed);
   		}
   	}
 
