@@ -73,8 +73,8 @@ public class Robot extends IterativeRobot {
 	
 	DifferentialDrive drive;
 
-	SpeedControllerGroup leftMotors;
-	SpeedControllerGroup rightMotors;
+	CatzTalonGroup leftMotors;
+	CatzTalonGroup rightMotors;
 	
 	Thread m_visionThread;
 
@@ -134,8 +134,8 @@ public class Robot extends IterativeRobot {
 		
 		xbox = new XboxController(1);
 		
-		leftMotors = new SpeedControllerGroup(fleft, rleft);
-		rightMotors = new SpeedControllerGroup(fright, rright);
+		leftMotors = new CatzTalonGroup(fleft, rleft);
+		rightMotors = new CatzTalonGroup(fright, rright);
 		
 		drive = new DifferentialDrive(leftMotors, rightMotors);
 	}
@@ -185,7 +185,13 @@ public class Robot extends IterativeRobot {
 		
 		if (xbox.getBButton())
 		{
-			
+			leftMotors.useBoost();
+			rightMotors.useBoost();
+		}
+		else
+		{
+			leftMotors.disableBoost();
+			rightMotors.disableBoost();
 		}
 	}
 
