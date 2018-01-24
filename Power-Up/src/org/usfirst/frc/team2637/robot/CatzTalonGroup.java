@@ -40,7 +40,7 @@ public class CatzTalonGroup extends SendableBase implements SpeedController {
 		  m_speedControllers[i + 1] = speedControllers[i];
 		  addChild(speedControllers[i]);
 	  }
-    	
+	  
 	  m_hotMot = null;
 	  this.dropItIfItsHot();
     

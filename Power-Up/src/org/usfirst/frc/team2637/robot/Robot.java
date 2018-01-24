@@ -76,7 +76,7 @@ public class Robot extends IterativeRobot {
 	CatzTalonGroup leftMotors;
 	CatzTalonGroup rightMotors;
 	
-	Thread m_visionThread;
+	//Thread m_visionThread;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -86,7 +86,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		//m_chooser.addDefault("Default Auto", kDefaultAuto);
 		//m_chooser.addObject("My Auto", kCustomAuto);
-		
+		/*
 		m_visionThread = new Thread(() -> {
 			// Get the UsbCamera from CameraServer
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
@@ -123,14 +123,15 @@ public class Robot extends IterativeRobot {
 		});
 		m_visionThread.setDaemon(true);
 		m_visionThread.start();
+		*/
+		
 		//SmartDashboard.putData("Auto choices", m_chooser);
 		
 		
-		fleft = new WPI_TalonSRX(0);
-		fright = new WPI_TalonSRX(4);
-		rleft = new WPI_TalonSRX(1);
-		rright = new WPI_TalonSRX(5);
-		
+		fleft = new WPI_TalonSRX(3);
+		fright = new WPI_TalonSRX(2);
+		rleft = new WPI_TalonSRX(4);
+		rright = new WPI_TalonSRX(1);
 		
 		xbox = new XboxController(1);
 		
@@ -181,8 +182,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		
-		drive.arcadeDrive(xbox.getY(Hand.kLeft), xbox.getX(Hand.kRight));
-		
 		if (xbox.getBButton())
 		{
 			leftMotors.useBoost();
@@ -193,6 +192,8 @@ public class Robot extends IterativeRobot {
 			leftMotors.disableBoost();
 			rightMotors.disableBoost();
 		}
+		
+		drive.arcadeDrive(xbox.getY(Hand.kLeft), xbox.getX(Hand.kRight));
 	}
 
 	/**
