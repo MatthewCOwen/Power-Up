@@ -62,8 +62,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 public class Robot extends IterativeRobot {
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
-	private String m_autoSelected;
-	private SendableChooser<String> m_chooser = new SendableChooser<>();
+	
+	private static int readingCounter = 0;
+	//private String m_autoSelected;
+	//private SendableChooser<String> m_chooser = new SendableChooser<>();
 	
 	WPI_TalonSRX fright;
 	WPI_TalonSRX fleft;
@@ -75,6 +77,8 @@ public class Robot extends IterativeRobot {
 
 	CatzTalonGroup leftMotors;
 	CatzTalonGroup rightMotors;
+	
+	LidarSubsystem lidar;
 	
 	//Thread m_visionThread;
 
@@ -127,7 +131,6 @@ public class Robot extends IterativeRobot {
 		
 		//SmartDashboard.putData("Auto choices", m_chooser);
 		
-		
 		fleft = new WPI_TalonSRX(3);
 		fright = new WPI_TalonSRX(2);
 		rleft = new WPI_TalonSRX(4);
@@ -139,6 +142,8 @@ public class Robot extends IterativeRobot {
 		rightMotors = new CatzTalonGroup(fright, rright);
 		
 		drive = new DifferentialDrive(leftMotors, rightMotors);
+		
+		lidar = new LidarSubsystem();
 	}
 
 	/**
@@ -154,10 +159,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		m_autoSelected = m_chooser.getSelected();
+		//m_autoSelected = m_chooser.getSelected();
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
-		System.out.println("Auto selected: " + m_autoSelected);
+		//System.out.println("Auto selected: " + m_autoSelected);
 	}
 
 	/**
@@ -165,6 +170,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		/*
 		switch (m_autoSelected) {
 			case kCustomAuto:
 				// Put custom auto code here
@@ -174,6 +180,7 @@ public class Robot extends IterativeRobot {
 				// Put default auto code here
 				break;
 		}
+		*/
 	}
 
 	/**
@@ -194,6 +201,8 @@ public class Robot extends IterativeRobot {
 		}
 		
 		drive.arcadeDrive(xbox.getY(Hand.kLeft), xbox.getX(Hand.kRight));
+		
+		
 	}
 
 	/**
@@ -201,5 +210,28 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+
+		int distance;
+		
+		readingCounter++;
+		readingCounter %= 100;
+		
+		distance = lidar.getDistance(readingCounter == 0 ? true : false);
+				
+		System.out.println("Distance: " + distance);
+		
+		/*
+		
+		if (distance != 36 && distance != 32 && distance != 38 && distance != 5)
+		{
+			System.out.println("Distance: " + distance);
+		}
+		
+		*/
+		
+		if (distance == 0)
+		{
+			lidar.isWiredCorrectly();
+		}
 	}
 }
